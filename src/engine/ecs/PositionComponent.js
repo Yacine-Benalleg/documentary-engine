@@ -5,13 +5,13 @@ import Component from './Component.js'
  */
 export default class PositionComponent extends Component {
   /**
-   * @param {number} latitude
-   * @param {number} longitude
+   * @param {number} x - Horizontal coordinate, or longitude.
+   * @param {number} y - Vertical coordinate, or latitude.
    */
-  constructor(latitude, longitude) {
+  constructor(x, y) {
     super('position')
 
-    this.latitude = latitude
-    this.longitude = longitude
+    this.x = x
+    this.y = y
   }
 }
