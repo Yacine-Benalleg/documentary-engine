@@ -9,7 +9,6 @@ import Entity from './Entity.js'
 export default class EntityManager {
   constructor() {
     this.entities = new Map()
-    this.nextId = 1
   }
 
   /**
@@ -19,9 +18,8 @@ export default class EntityManager {
    * @returns {Entity}
    */
   createEntity(name = '') {
-    const entity = new Entity(`entity-${this.nextId}`, name)
+    const entity = new Entity(crypto.randomUUID(), name)
 
-    this.nextId += 1
     this.entities.set(entity.id, entity)
 
     return entity
