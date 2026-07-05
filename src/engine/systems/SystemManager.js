@@ -7,12 +7,12 @@ export default class SystemManager {
   }
 
   /**
-   * Registers a system at the end of the update order.
+   * Adds a system at the end of the update order.
    *
    * @param {{ name: string, update: (scene: unknown, deltaTime: number) => void }} system
    * @returns {{ name: string, update: (scene: unknown, deltaTime: number) => void }}
    */
-  registerSystem(system) {
+  addSystem(system) {
     this.systems.push(system)
     return system
   }
