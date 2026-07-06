@@ -1,18 +1,11 @@
 import { useEffect, useRef } from 'react'
-import { Scene } from '../../core/index.js'
-import Camera from '../../engine/Camera.js'
-import Viewport from '../../engine/core/Viewport.js'
-import EntityManager from '../../engine/ecs/EntityManager.js'
-import PositionComponent from '../../engine/ecs/PositionComponent.js'
-import CanvasRenderer from '../../engine/render/CanvasRenderer.js'
-import RenderSystem from '../../engine/systems/RenderSystem.js'
-import SystemManager from '../../engine/systems/SystemManager.js'
+import Engine from '../../engine/Engine.js'
 
 /**
  * React shell for the engine canvas.
  *
- * This component only initializes engine objects and asks the renderer to draw
- * one frame. Drawing stays inside CanvasRenderer, outside React.
+ * This component only creates and starts the Engine. Runtime ownership stays
+ * outside React.
  */
 export default function CanvasViewport() {
   const canvasRef = useRef(null)
@@ -24,23 +17,11 @@ export default function CanvasViewport() {
       return undefined
     }
 
-    const scene = new Scene()
-    const camera = new Camera()
-    const viewport = new Viewport(window.innerWidth, window.innerHeight, camera)
-    const entityManager = new EntityManager()
-    const renderer = new CanvasRenderer(canvas, camera, viewport)
-    const systemManager = new SystemManager()
-    const sampleEntity = entityManager.createEntity('Sample Entity')
+    const engine = new Engine(canvas)
 
-    sampleEntity.addComponent(new PositionComponent(0, 0))
-    scene.addEntity(sampleEntity)
-
-    renderer.setViewport(window.innerWidth, window.innerHeight)
-    systemManager.addSystem(new RenderSystem(renderer))
-    systemManager.update(scene, 0)
-
+    engine.start()
     return () => {
-      renderer.clear()
+      engine.stop()
     }
   }, [])
 
