@@ -11,11 +11,13 @@ export default class CanvasRenderer extends Renderer {
   /**
    * @param {HTMLCanvasElement} canvas
    * @param {unknown} camera
+   * @param {{ worldToScreen: (x: number, y: number) => { x: number, y: number }, resize: (width: number, height: number) => void }} viewport
    */
-  constructor(canvas, camera) {
+  constructor(canvas, camera, viewport) {
     super(camera)
 
     this.canvas = canvas
+    this.viewport = viewport
     this.context = canvas.getContext('2d')
 
     if (!this.context) {
@@ -42,9 +44,10 @@ export default class CanvasRenderer extends Renderer {
       }
 
       const position = entity.getComponent('position')
+      const screenPosition = this.viewport.worldToScreen(position.x, position.y)
 
       this.context.beginPath()
-      this.context.arc(position.x, position.y, 4, 0, Math.PI * 2)
+      this.context.arc(screenPosition.x, screenPosition.y, 4, 0, Math.PI * 2)
       this.context.fill()
     })
   }
@@ -68,6 +71,7 @@ export default class CanvasRenderer extends Renderer {
    */
   setViewport(width, height) {
     super.setViewport(width, height)
+    this.viewport.resize(width, height)
     this.canvas.width = width
     this.canvas.height = height
   }

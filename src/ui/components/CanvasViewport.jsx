@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { Scene } from '../../core/index.js'
 import Camera from '../../engine/Camera.js'
+import Viewport from '../../engine/core/Viewport.js'
 import EntityManager from '../../engine/ecs/EntityManager.js'
 import PositionComponent from '../../engine/ecs/PositionComponent.js'
 import CanvasRenderer from '../../engine/render/CanvasRenderer.js'
@@ -25,12 +26,13 @@ export default function CanvasViewport() {
 
     const scene = new Scene()
     const camera = new Camera()
+    const viewport = new Viewport(window.innerWidth, window.innerHeight, camera)
     const entityManager = new EntityManager()
-    const renderer = new CanvasRenderer(canvas, camera)
+    const renderer = new CanvasRenderer(canvas, camera, viewport)
     const systemManager = new SystemManager()
     const sampleEntity = entityManager.createEntity('Sample Entity')
 
-    sampleEntity.addComponent(new PositionComponent(400, 300))
+    sampleEntity.addComponent(new PositionComponent(0, 0))
     scene.addEntity(sampleEntity)
 
     renderer.setViewport(window.innerWidth, window.innerHeight)
