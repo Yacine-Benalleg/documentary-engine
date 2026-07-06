@@ -1,11 +1,11 @@
 import Renderer from './Renderer.js'
 
 /**
- * Canvas 2D renderer used to verify the rendering pipeline.
+ * Canvas 2D renderer for scene entities.
  *
  * CanvasRenderer owns only its canvas drawing context. Scene and camera state
- * are supplied from outside and are not rendered into entities, maps, or labels
- * in this first version.
+ * are supplied from outside. It renders only entities with position data in
+ * this first scene-rendering version.
  */
 export default class CanvasRenderer extends Renderer {
   /**
@@ -26,20 +26,27 @@ export default class CanvasRenderer extends Renderer {
   }
 
   /**
-   * Renders a pipeline test frame.
+   * Renders positioned scene entities.
    *
-   * @param {unknown} scene
+   * @param {{ entities: Map<string, { hasComponent: (type: string) => boolean, getComponent: (type: string) => { x: number, y: number } | undefined }> }} scene
    * @returns {void}
    */
   render(scene) {
-    void scene
-
     this.clear()
 
     this.context.fillStyle = '#ffffff'
-    this.context.beginPath()
-    this.context.arc(this.width / 2, this.height / 2, 4, 0, Math.PI * 2)
-    this.context.fill()
+
+    scene.entities.forEach((entity) => {
+      if (!entity.hasComponent('position')) {
+        return
+      }
+
+      const position = entity.getComponent('position')
+
+      this.context.beginPath()
+      this.context.arc(position.x, position.y, 4, 0, Math.PI * 2)
+      this.context.fill()
+    })
   }
 
   /**
